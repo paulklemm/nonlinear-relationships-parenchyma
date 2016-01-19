@@ -1,0 +1,18 @@
+---
+title: "Nonlinear Relationships Parenchyma"
+author: "Paul Klemm, Mehdi Arian Alborzi and Bernhard Preim"
+date: "19. Januar 2016"
+output: html_document
+---
+
+This R Markdown document aims to identify nonlinear relationships of a breast cancer data set from the [Study of Health in Pomerania](https://www.medizin.uni-greifswald.de/cm/fv/ship.html).
+
+At first, load the data and give an overview over the target feature, which is the percentage of the parenchyma tissue in the female breast.
+
+```{r}
+# Load the data
+path_to_data <- '/Users/paul/Workshop/Promotion/Data/Breast Fat Dataset/breast_fat_imageonly_labels.csv'
+raw_data <- read.csv(path_to_data)
+# The target variable is `Segmentation_ParenchymToVolume
+summary(raw_data$Segmentation_ParenchymToVolume)
+```
