@@ -15,4 +15,40 @@ path_to_data <- '/Users/paul/Workshop/Promotion/Data/Breast Fat Dataset/breast_f
 raw_data <- read.csv(path_to_data)
 # The target variable is `Segmentation_ParenchymToVolume
 summary(raw_data$Segmentation_ParenchymToVolume)
+# Filter numeric variables (https://stackoverflow.com/questions/5863097/selecting-only-numeric-columns-from-a-data-frame)
+numerical_data <- raw_data[ , sapply(raw_data, is.numeric)]
+```
+
+We want to extract nonlinear relationships of all numerical variables with the parenchyma tissue share. This is carried out by applying a polynomial regression models. The notation on how to conduct a polynomial regression is taken from [this blog post](http://www.r-bloggers.com/polynomial-regression-techniques/). The basic notation is `numerical_data$Segmentation_ParenchymToVolume ~ numerical_data$numeric_var + I(numerical_data$numeric_var^2)`.
+
+```{r}
+# Calculate linear models with all variables
+polynomial_models = list()
+for (dimension in names(numerical_data)) {
+  model_formula <- paste("numerical_data$Segmentation_ParenchymToVolume ~ numerical_data$", dimension, "+ I(numerical_data$", dimension, "^2)", sep="")
+  polynomial_models[dimension] <- lm(formula = model_formula)
+  print(model_formula)
+}
+```
+
+Print all models.
+
+```{r fig.width=5, fig.height=5}
+#for (dimension in names(numerical_data)) {
+#  # ToDo Continue here
+#  plot(numerical_data[dimension], numerical_data$Segmentation_ParenchymToVolume)
+#  points(numerical_data[dimension], predict(polynomial_models[[dimension]]), col="red")
+}
+```
+
+# Tests
+
+Here is the code to visualize the result of a linear model fitted to a scatterplot of the underlying data.
+
+```{r, fig.width=5, fig.height=5}
+polynomial_model <- lm(formula = numerical_data$Segmentation_ParenchymToVolume ~ numerical_data$Age + I(numerical_data$Age^2))
+# Plot the result
+plot(numerical_data$Age, numerical_data$Segmentation_ParenchymToVolume)
+points(numerical_data$Age, predict(polynomial_model), col="red")
+# https://stackoverflow.com/questions/28114677/calculate-curvature-from-smooth-spline-in-r
 ```
